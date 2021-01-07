@@ -1,6 +1,6 @@
 {
   "name": "ioredis-aux",
-  "version": "0.1.10",
+  "version": "0.1.11",
   "description": "A package to aid the use of ioredis",
   "main": "dist/index.js",
   "repository": "https://github.com/iJhefe/ioredis-aux.git",
