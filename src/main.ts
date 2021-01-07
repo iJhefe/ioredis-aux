@@ -12,7 +12,7 @@ interface DeleteOptions<T> {
     where: WhereOperator<T>;
 }
 
-interface findOptions<T> {
+interface FindOptions<T> {
     where: WhereOperator<T>;
     operator?: FindOperator;
 }
@@ -22,7 +22,7 @@ export default class IoredisAux extends IoredisClient {
         super(options);
     }
 
-    public async find<T>(key: string, options: findOptions<T>): Promise<T[]> {
+    public async find<T>(key: string, options: FindOptions<T>): Promise<T[]> {
         try {
             const { where, operator } = options;
 
@@ -41,7 +41,7 @@ export default class IoredisAux extends IoredisClient {
 
     public async findOne<T>(
         key: string,
-        options: findOptions<T>,
+        options: FindOptions<T>,
     ): Promise<T | false> {
         try {
             const { where, operator } = options;
@@ -202,7 +202,8 @@ export {
     Idable,
     WhereOperator,
     FindOperator,
-    findOptions,
+    FindOptions,
     RedisClient,
-    RedisOptions
+    RedisOptions,
+    DeleteOptions,
 }
