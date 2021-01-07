@@ -31,6 +31,10 @@ interface Entity {
 const KEY = "EXAMPLE";
 
 const objectExample: Entity = { id: 1, username: "Jeffyter" };
+
+const createFn = id => () => {
+    return { id: id, username: 'User ' + id }
+}
 ```
 
 **saveOrUpdate**
@@ -63,6 +67,12 @@ const searchTwo = await ioredis.find<Entity>(KEY, {
 // Available operators: "AND" | "OR" | "NOT" | "NOT_AND" | "NOT_OR"
 // Default operator: "AND"
 ```
+
+###### findOrCreate
+```typescript
+const userId2 = await ioredis.findOrCreate(KEY, { where: { id: 2 } }, createFn(2))
+```
+
 ###### findOne
 ```typescript
 // Will try find the entity with "id" 1
@@ -95,5 +105,6 @@ const deletedTwo = await redis.delete<Entity>(KEY, {
 ##### Available Functions
 1. saveOrUpdate
 2. find
-3. findOne
-4. delete
+3. findOrCreate
+4. findOne
+5. delete
