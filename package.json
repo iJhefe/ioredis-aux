@@ -3,6 +3,7 @@
   "version": "0.1.13",
   "description": "A package to aid the use of ioredis",
   "main": "dist/main.js",
+  "types": "dist/main.d.ts",
   "repository": "https://github.com/iJhefe/ioredis-aux.git",
   "author": "iJhefe <jeffytersaraiva@gmail.com>",
   "license": "MIT",
