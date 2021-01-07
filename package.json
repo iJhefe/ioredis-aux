@@ -2,7 +2,7 @@
   "name": "ioredis-aux",
   "version": "0.1.11",
   "description": "A package to aid the use of ioredis",
-  "main": "dist/index.js",
+  "main": "dist/main.js",
   "repository": "https://github.com/iJhefe/ioredis-aux.git",
   "author": "iJhefe <jeffytersaraiva@gmail.com>",
   "license": "MIT",
@@ -17,6 +17,7 @@
     "ioredis": "^4.19.4"
   },
   "devDependencies": {
+    "@types/ioredis": "^4.17.10",
     "@types/node": "^14.14.20",
     "@typescript-eslint/eslint-plugin": "^4.12.0",
     "@typescript-eslint/parser": "^4.12.0",
