@@ -70,6 +70,9 @@ const searchTwo = await ioredis.find<Entity>(KEY, {
 
 ###### findOrCreate
 ```typescript
+// Will search user where id = 2
+// If not exists, will execute a function what create a userId 2 in the memory
+// The "createFn" is usually a database function
 const userId2 = await ioredis.findOrCreate(KEY, { where: { id: 2 } }, createFn(2))
 ```
 

@@ -35,14 +35,14 @@ export default class IoredisAux extends IoredisClient {
         return this.set(key, obj);
     }
 
-    public async findOrCreate<T>(key: string, options: FindOptions<T>, createFn: () => T[] | T, comparator: WhereOperator<T> = { id: options.where?.id}): Promise<T[] | T> {
+    public async findOrCreate<T>(key: string, options: FindOptions<T>, createFn: () => T[] | T | Promise<T[] | T>, comparator: WhereOperator<T> = { id: options.where?.id}): Promise<T[] | T> {
         try {
             log('finding', key, options)
             const finded = await this.find<T>(key, options);
 
             if (finded.length === 0) {
                 log('not found, creating new...')
-                const created = createFn();
+                const created = await createFn();
 
                 log('created', created)
 
