@@ -13,18 +13,17 @@ interface Entity {
 
 const KEY = "EXAMPLE";
 
-(async () => {
-    const objetoExemplo: Entity = { id: 1, username: "Jeffyter" };
+const objectExample: Entity = { id: 1, username: "Jeffyter" };
 
-    const memoized = await ioredis.saveOrUpdate<Entity>(KEY, objetoExemplo, {
+(async () => {
+    const memoized = await ioredis.saveOrUpdate<Entity>(KEY, objectExample, {
         id: 1,
     });
 
     if (memoized) {
-        const search = await ioredis.findOne<Entity>(KEY, 1);
+        const search = await ioredis.findOne<Entity>(KEY, { where: { id: 1 } });
 
         console.log(search);
-
 
         // await ioredis.delete<Entity>(KEY, {
         //     where: {
