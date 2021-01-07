@@ -1,5 +1,5 @@
 {
-  "name": "ioredis-helper",
+  "name": "ioredis-aux",
   "version": "0.1.0",
   "description": "A package to aid the use of ioredis",
   "main": "dist/main.js",
