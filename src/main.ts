@@ -1,5 +1,4 @@
-import Ioredis from "./ioredis";
-import { RedisOptions } from "ioredis";
+import IoredisClient, { RedisOptions } from "./ioredisClient";
 
 export type Idable<T> = {
     [key in keyof T | "id"]?: any;
@@ -18,7 +17,7 @@ export interface findOptions<T> {
     operator?: FindOperator;
 }
 
-export default class IoredisHelper extends Ioredis {
+export default class IoredisAux extends IoredisClient {
     constructor(options: RedisOptions) {
         super(options);
     }

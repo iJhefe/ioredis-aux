@@ -1,13 +1,17 @@
 import Redis from "ioredis";
 
-export default class Ioredis {
-    protected redis: Redis.Redis;
+export type RedisClient = Redis.Redis;
 
-    constructor(options: Redis.RedisOptions) {
+export type RedisOptions = Redis.RedisOptions
+
+export default class IoredisClient {
+    protected redis: RedisClient;
+
+    constructor(options: RedisOptions) {
         this.start(options);
     }
 
-    protected start(options: Redis.RedisOptions): Redis.Redis {
+    protected start(options: RedisOptions): RedisClient {
         return (this.redis = new Redis(options));
     }
 
