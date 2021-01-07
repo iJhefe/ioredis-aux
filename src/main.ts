@@ -46,19 +46,17 @@ export default class IoredisAux extends IoredisClient {
         try {
             const memoized = await this.getAll<T[]>(key);
 
-            if (typeof idOrOptions === 'number') {
-                if (memoized) {
+            if (memoized) {
+                if (typeof idOrOptions === 'number') {
                     const findFn = this.findJoinFn<T>({ id: idOrOptions });
                     return memoized.find(findFn) || false;
-                }
-            } else {
-                const { where, operator } = idOrOptions;
-
-                if (memoized) {
+                } else {
+                    const { where, operator } = idOrOptions;
                     const findFn = this.findJoinFn<T>(where, operator);
                     return memoized.find(findFn) || false;
                 }
             }
+
             return false;
         } catch (e) {
             throw new Error(e);
