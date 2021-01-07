@@ -11,6 +11,10 @@ export default class IoredisClient {
         this.start(options);
     }
 
+    public get client(): RedisClient {
+        return this.redis;
+    }
+
     protected start(options: RedisOptions): RedisClient {
         return (this.redis = new Redis(options));
     }
