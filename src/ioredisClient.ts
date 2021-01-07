@@ -41,7 +41,7 @@ export default class IoredisClient {
         }
     }
 
-    protected async getAll<T>(key: string): Promise<T> {
+    public async getAll<T>(key: string): Promise<T> {
         try {
             const getted = await this.redis.get(key);
             return JSON.parse(getted) as T;

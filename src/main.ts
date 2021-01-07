@@ -1,10 +1,13 @@
 import IoredisClient, { RedisOptions, RedisClient } from "./ioredisClient";
+import debug from 'debug'
+
+const log = debug('IoredisAux')
 
 type Idable<T> = {
     [key in keyof T | "id"]?: any;
 };
 
-type WhereOperator<T> = { [key in keyof T]?: number | string };
+type WhereOperator<T> = { [key in keyof T | 'id']?: number | string };
 
 type FindOperator = "AND" | "OR" | "NOT" | "NOT_AND" | "NOT_OR";
 
@@ -22,13 +25,52 @@ export default class IoredisAux extends IoredisClient {
         super(options);
     }
 
+    public memoize<T>(key: string, obj: T[]) {
+        if (!Array.isArray(obj)) {
+            throw new Error("You should memoize just arrays");
+        }
+
+        log('saving', key, obj)
+
+        return this.set(key, obj);
+    }
+
+    public async findOrCreate<T>(key: string, options: FindOptions<T>, createFn: () => T[] | T, comparator: WhereOperator<T> = { id: options.where?.id}): Promise<T[] | T> {
+        try {
+            log('finding', key, options)
+            const finded = await this.find<T>(key, options);
+
+            if (finded.length === 0) {
+                log('not found, creating new...')
+                const created = createFn();
+
+                log('created', created)
+
+                if (Array.isArray(created)) {
+                    for (const item of created) {
+                        await this.saveOrUpdate(key, item, comparator);
+                    }
+                } else {
+                    await this.saveOrUpdate<T>(key, created, comparator);
+                }
+
+                return created;
+            }
+
+            log('finded', finded)
+            return finded;
+        } catch (e) {
+            throw new Error(e)
+        }
+    }
+
     public async find<T>(key: string, options: FindOptions<T>): Promise<T[]> {
         try {
             const { where, operator } = options;
 
             const memoized = await this.getAll<T[]>(key);
 
-            if (memoized) {
+            if (memoized && !(memoized instanceof IoredisClient)) {
                 const filterFn = this.findJoinFn<T>(where, operator);
                 return memoized.filter(filterFn);
             }
@@ -69,12 +111,16 @@ export default class IoredisAux extends IoredisClient {
         comparator: WhereOperator<T>,
     ) {
         try {
+            log('saving', key, obj, comparator)
+
             const exists = await this.findOne(key, {
                 where: comparator,
                 operator: "AND",
             });
 
             if (exists) {
+                log('exists, replacing...')
+
                 const withoutCurrent = await this.find<T>(key, {
                     where: comparator,
                     operator: "NOT",
@@ -82,6 +128,8 @@ export default class IoredisAux extends IoredisClient {
 
                 return this.memoize<T>(key, [obj, ...withoutCurrent]);
             } else {
+                log('dont exists, saving new...')
+
                 const items = (await this.getAll<T[]>(key)) || [];
 
                 return this.memoize<T>(key, [obj, ...items]);
@@ -97,19 +145,26 @@ export default class IoredisAux extends IoredisClient {
     ) {
         try {
             const items = await this.getAll<Array<Idable<T>>>(key);
+
             if (typeof idOrOptions === "number") {
+                log('deleting as id...');
                 const index = items.findIndex((i) => i.id === idOrOptions);
 
                 // Item exist
                 if (index >= 0) {
                     items.splice(index, 1);
 
+                    log('found and deleted')
+
                     await this.memoize(key, items);
                 }
 
+                log('an item with key', key, 'and id', idOrOptions, 'not found, returning true')
                 return true;
             } else {
                 const { where } = idOrOptions;
+
+                log('deleting where', where)
 
                 const filterFn = this.findJoinFn(where, "NOT");
 
@@ -213,14 +268,6 @@ export default class IoredisAux extends IoredisClient {
 
             return is;
         };
-    }
-
-    public memoize<T>(key: string, obj: T[]) {
-        if (!Array.isArray(obj)) {
-            throw new Error("You should memoize just arrays");
-        }
-
-        return this.set(key, obj);
     }
 }
 
