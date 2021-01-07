@@ -21,13 +21,13 @@ const KEY = "EXAMPLE";
     });
 
     if (memoized) {
-        const procurar = await ioredis.find<Entity>(KEY, {
+        const search = await ioredis.find<Entity>(KEY, {
             where: {
                 username: "Jeffyter",
             },
         });
 
-        console.log(procurar);
+        console.log(search);
 
         await ioredis.delete<Entity>(KEY, {
             where: {
@@ -36,12 +36,12 @@ const KEY = "EXAMPLE";
             },
         });
 
-        const procurarDois = await ioredis.find<Entity>(KEY, {
+        const searchTwo = await ioredis.find<Entity>(KEY, {
             where: {
                 id: 1,
             },
         });
 
-        console.log(procurarDois);
+        console.log(searchTwo);
     }
 })();
