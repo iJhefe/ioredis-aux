@@ -1,18 +1,18 @@
-import IoredisClient, { RedisOptions } from "./ioredisClient";
+import IoredisClient, { RedisOptions, RedisClient } from "./ioredisClient";
 
-export type Idable<T> = {
+type Idable<T> = {
     [key in keyof T | "id"]?: any;
 };
 
-export type WhereOperator<T> = { [key in keyof T]?: number | string };
+type WhereOperator<T> = { [key in keyof T]?: number | string };
 
-export type FindOperator = "AND" | "OR" | "NOT";
+type FindOperator = "AND" | "OR" | "NOT";
 
-export interface DeleteOptions<T> {
+interface DeleteOptions<T> {
     where: WhereOperator<T>;
 }
 
-export interface findOptions<T> {
+interface findOptions<T> {
     where: WhereOperator<T>;
     operator?: FindOperator;
 }
@@ -196,4 +196,13 @@ export default class IoredisAux extends IoredisClient {
 
         return this.set(key, obj);
     }
+}
+
+export {
+    Idable,
+    WhereOperator,
+    FindOperator,
+    findOptions,
+    RedisClient,
+    RedisOptions
 }
