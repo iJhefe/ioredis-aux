@@ -6,7 +6,7 @@ type Idable<T> = {
 
 type WhereOperator<T> = { [key in keyof T]?: number | string };
 
-type FindOperator = "AND" | "OR" | "NOT";
+type FindOperator = "AND" | "OR" | "NOT" | "NOT_AND" | "NOT_OR";
 
 interface DeleteOptions<T> {
     where: WhereOperator<T>;
@@ -41,18 +41,24 @@ export default class IoredisAux extends IoredisClient {
 
     public async findOne<T>(
         key: string,
-        options: FindOptions<T>,
+        idOrOptions: number | FindOptions<T>,
     ): Promise<T | false> {
         try {
-            const { where, operator } = options;
-
             const memoized = await this.getAll<T[]>(key);
 
-            if (memoized) {
-                const findFn = this.findJoinFn<T>(where, operator);
-                return memoized.find(findFn) || false;
-            }
+            if (typeof idOrOptions === 'number') {
+                if (memoized) {
+                    const findFn = this.findJoinFn<T>({ id: idOrOptions });
+                    return memoized.find(findFn) || false;
+                }
+            } else {
+                const { where, operator } = idOrOptions;
 
+                if (memoized) {
+                    const findFn = this.findJoinFn<T>(where, operator);
+                    return memoized.find(findFn) || false;
+                }
+            }
             return false;
         } catch (e) {
             throw new Error(e);
@@ -128,13 +134,18 @@ export default class IoredisAux extends IoredisClient {
             operator = "AND";
         }
 
-        switch (operator) {
+        switch (operator.toUpperCase()) {
             case "AND":
                 return this._findOperatorAnd<T>(keys, where);
             case "OR":
                 return this._findOperatorOr<T>(keys, where);
             case "NOT":
-                return this._findOperatorNot<T>(keys, where);
+            case "NOT_AND":
+                return this._findOperatorNotAnd<T>(keys, where);
+            case "NOT_OR":
+                return this._findOperatorNotOr<T>(keys, where);
+            default:
+                return this._findOperatorAnd<T>(keys, where);
         }
     }
 
@@ -155,7 +166,7 @@ export default class IoredisAux extends IoredisClient {
         };
     }
 
-    private _findOperatorNot<T>(
+    private _findOperatorNotAnd<T>(
         keys: string[] | number[],
         where: unknown,
     ): (item: T) => boolean {
@@ -166,6 +177,23 @@ export default class IoredisAux extends IoredisClient {
                 const value = where[key];
 
                 is &&= item[key] !== value;
+            });
+
+            return is;
+        };
+    }
+
+    private _findOperatorNotOr<T>(
+        keys: string[] | number[],
+        where: unknown,
+    ): (item: T) => boolean {
+        return (item: T) => {
+            let is = true;
+
+            keys.forEach((key) => {
+                const value = where[key];
+
+                is ||= item[key] !== value;
             });
 
             return is;

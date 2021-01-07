@@ -21,25 +21,25 @@ const KEY = "EXAMPLE";
     });
 
     if (memoized) {
-        const search = await ioredis.find<Entity>(KEY, {
-            where: {
-                username: "Jeffyter",
-            },
-        });
+        const search = await ioredis.findOne<Entity>(KEY, 1);
 
         console.log(search);
 
-        await ioredis.delete<Entity>(KEY, {
-            where: {
-                username: "Jeffyter",
-                id: 2,
-            },
-        });
 
+        // await ioredis.delete<Entity>(KEY, {
+        //     where: {
+        //         username: "Jeffyter",
+        //         id: 2,
+        //     },
+        // });
+
+        // Will find the id 1
         const searchTwo = await ioredis.find<Entity>(KEY, {
             where: {
                 id: 1,
+                username: 'Jeffyter'
             },
+            operator: 'NOT_OR'
         });
 
         console.log(searchTwo);
