@@ -14,7 +14,7 @@
 
 ##### Examples
 ###### Code scope
-```javascript
+```typescript
 import IoredisAux from "./main";
 
 const ioredis = new IoredisAux({
@@ -34,7 +34,7 @@ const objectExample: Entity = { id: 1, username: "Jeffyter" };
 ```
 
 **saveOrUpdate**
-```javascript
+```typescript
 // Will compare if exists a object with id "objectExample.id"
 // If this exists, will update for new object example, else will create add the object
 // to "table" array
@@ -44,7 +44,7 @@ const objectExample: Entity = { id: 1, username: "Jeffyter" };
 ```
 
 **find**
-```javascript
+```typescript
 // Will find a entity where id = 1
  const searchOne = await ioredis.find<Entity>(KEY, {
  	where: {
@@ -64,7 +64,7 @@ const searchTwo = await ioredis.find<Entity>(KEY, {
 // Default operator: "AND"
 ```
 ###### findOne
-```javascript
+```typescript
 // Will try find the entity with "id" 1
 const searchThree = await ioredis.findOne<Entity>(KEY, 1);
 
@@ -78,7 +78,7 @@ const searchFour = await ioredis.findOne<Entity>(KEY, {
 ```
 
 ###### delete
-```
+```typescript
 // Will delete where id = 1
 const deleted = await ioredis.delete<Entity>(KEY, 1)
 
