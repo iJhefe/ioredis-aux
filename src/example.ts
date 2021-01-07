@@ -1,4 +1,4 @@
-import IoredisAux from "../dist/main";
+import IoredisAux from "./main";
 
 const ioredis = new IoredisAux({
     host: "127.0.0.1",
