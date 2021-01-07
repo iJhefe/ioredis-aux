@@ -18,7 +18,7 @@ export interface findOptions<T> {
     operator?: FindOperator;
 }
 
-export default class IoredisAux extends Ioredis {
+export default class IoredisHelper extends Ioredis {
     constructor(options: RedisOptions) {
         super(options);
     }

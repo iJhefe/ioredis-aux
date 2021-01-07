@@ -1,6 +1,6 @@
-import IoredisAux from "./main";
+import IoredisHelper from "./main";
 
-const ioredis = new IoredisAux({
+const ioredis = new IoredisHelper({
     host: "127.0.0.1",
     port: 6379,
     keyPrefix: "EX_",
