@@ -84,22 +84,30 @@ export default class IoredisAux extends IoredisClient {
     public async findOne<T, K>(
         key: string,
         idOrOptions: number | FindOptions<K>,
-    ): Promise<T | false> {
+    ): Promise<T> {
         try {
             const memoized = await this.getAll<T[]>(key);
 
             if (memoized) {
                 if (typeof idOrOptions === 'number') {
                     const findFn = this.findJoinFn<T>({ id: idOrOptions });
-                    return memoized.find(findFn) || false;
+                    const res = memoized.find(findFn);
+
+                    if (res) {
+                        return res;
+                    }
                 } else {
                     const { where, operator } = idOrOptions;
                     const findFn = this.findJoinFn<T>(where, operator);
-                    return memoized.find(findFn) || false;
+                    const res = memoized.find(findFn);
+
+                    if (res) {
+                        return res;
+                    }
                 }
             }
 
-            return false;
+            throw new Error("Can't find with given parameters")
         } catch (e) {
             throw e;
         }

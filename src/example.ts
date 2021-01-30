@@ -29,7 +29,7 @@ const createFn = id => () => {
     await ioredis.findOrCreate(KEY, { where: { id: 2 } }, createFn(2))
 
     if (memoized) {
-        const search = await ioredis.findOne<Entity>(KEY, { where: { id: 1 } });
+        const search: Entity = await ioredis.findOne(KEY, { where: { id: 1 } });
 
         // await ioredis.delete<Entity>(KEY, {
         //     where: {
