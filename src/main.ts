@@ -81,9 +81,9 @@ export default class IoredisAux extends IoredisClient {
         }
     }
 
-    public async findOne<T>(
+    public async findOne<T, K>(
         key: string,
-        idOrOptions: number | FindOptions<Partial<T>>,
+        idOrOptions: number | FindOptions<K>,
     ): Promise<T | false> {
         try {
             const memoized = await this.getAll<T[]>(key);
@@ -101,7 +101,7 @@ export default class IoredisAux extends IoredisClient {
 
             return false;
         } catch (e) {
-            throw new Error(e);
+            throw e;
         }
     }
 
