@@ -68,7 +68,7 @@ const searchTwo = await ioredis.find<Entity>(KEY, {
 // Default operator: "AND"
 ```
 
-###### findOrCreate
+**findOrCreate**
 ```typescript
 // Will search user where id = 2
 // If not exists, will execute a function what create a userId 2 in the memory
@@ -76,7 +76,7 @@ const searchTwo = await ioredis.find<Entity>(KEY, {
 const userId2 = await ioredis.findOrCreate(KEY, { where: { id: 2 } }, createFn(2))
 ```
 
-###### findOne
+**findOne**
 ```typescript
 // Will try find the entity with "id" 1
 const searchThree = await ioredis.findOne<Entity>(KEY, 1);
@@ -90,7 +90,7 @@ const searchFour = await ioredis.findOne<Entity>(KEY, {
 });
 ```
 
-###### delete
+**delete**
 ```typescript
 // Will delete where id = 1
 const deleted = await ioredis.delete<Entity>(KEY, 1)
