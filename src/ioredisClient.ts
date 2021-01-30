@@ -37,7 +37,7 @@ export default class IoredisClient {
 
             return !!(await this.redis.set(key, JSON.stringify(value)));
         } catch (e) {
-            throw new Error(e);
+            throw e;
         }
     }
 
@@ -46,7 +46,7 @@ export default class IoredisClient {
             const getted = await this.redis.get(key);
             return JSON.parse(getted) as T;
         } catch (e) {
-            throw new Error(e);
+            throw e;
         }
     }
 }

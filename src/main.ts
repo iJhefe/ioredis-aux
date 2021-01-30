@@ -70,14 +70,14 @@ export default class IoredisAux extends IoredisClient {
 
             const memoized = await this.getAll<T[]>(key);
 
-            if (memoized && !(memoized instanceof IoredisClient)) {
+            if (memoized) {
                 const filterFn = this.findJoinFn<T>(where, operator);
                 return memoized.filter(filterFn);
             }
 
             return [];
         } catch (e) {
-            throw new Error(e);
+            throw e;
         }
     }
 
@@ -121,10 +121,14 @@ export default class IoredisAux extends IoredisClient {
         try {
             log('saving', key, obj, comparator)
 
-            const exists = await this.findOne(key, {
-                where: comparator,
-                operator: "AND",
-            });
+            let exists = false;
+
+            try {
+                exists = await this.findOne(key, {
+                    where: comparator,
+                    operator: "AND",
+                });
+            } catch (e) {}
 
             if (exists) {
                 log('exists, replacing...')
