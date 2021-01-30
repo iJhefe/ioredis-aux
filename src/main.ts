@@ -83,7 +83,7 @@ export default class IoredisAux extends IoredisClient {
 
     public async findOne<T>(
         key: string,
-        idOrOptions: number | FindOptions<T>,
+        idOrOptions: number | FindOptions<Partial<T>>,
     ): Promise<T | false> {
         try {
             const memoized = await this.getAll<T[]>(key);

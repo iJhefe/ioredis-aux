@@ -1,6 +1,6 @@
 {
   "name": "ioredis-aux",
-  "version": "0.1.16",
+  "version": "0.1.161",
   "description": "A package to aid the use of ioredis",
   "main": "dist/main.js",
   "types": "dist/main.d.ts",
